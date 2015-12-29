@@ -1,5 +1,5 @@
 wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, $cordovaGeolocation, uiGmapIsReady,uiGmapGoogleMapApi,Settings) {
-
+    // Test
     function wikiQuerySearch(attrs) {
         var wikipediaAPIs = {
             en: "https://en.wikipedia.org/w/api.php?action=query&format=json&callback=JSON_CALLBACK",
