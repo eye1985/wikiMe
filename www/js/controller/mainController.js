@@ -11,7 +11,7 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
             '&prop=extracts&exintro=&explaintext=&titles=':
             '&list=search&srsearch=';
 
-        $http.jsonp(wikipediaAPIs[attrs.wikiLocale] + props + encodedQuery).success(function (data, status, headers, config) {
+        $http.jsonp(wikipediaAPIs[Settings.wikiLocale] + props + encodedQuery).success(function (data, status, headers, config) {
             var queryData = (data.query.search)?
                 data.query.search:
                 data.query.pages;
@@ -61,6 +61,14 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
         if(Settings.showNearbyPlaces){
             uiGmapIsReady.promise()
                 .then(function(mapInstances){
+
+                    if($scope.markers.length > 0 && $scope.circles.length > 0){
+                        $scope.markers[0].setMap(null);
+                        $scope.circles[0].setMap(null);
+                        $scope.markers = [];
+                        $scope.circles = [];
+                    }
+
                     var places = new maps.places.PlacesService(mapInstances[0].map);
                     var request = {
                         location: curLocation,
@@ -80,6 +88,9 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
                         title: title
                     });
 
+                    $scope.markers.push(marker);
+                    $scope.circles.push(circle);
+
                     circle.bindTo('center', marker, 'position');
 
                     places.nearbySearch(request,function(res,status){
@@ -97,6 +108,8 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
     }
 
     $scope.data = getCleanData();
+    $scope.markers=[];
+    $scope.circles=[];
     $scope.Settings = Settings;
     $scope.debug = '';
     $scope.googleNearbyPlaces={
@@ -108,8 +121,7 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
         $scope.data = getCleanData();
         wikiQuerySearch({
             query:itemTitle,
-            searchType:'extract',
-            wikiLocale:'no'
+            searchType:'extract'
         });
     };
 
@@ -143,8 +155,6 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
                                     $scope.debug += i + ': ' + results[i].formatted_address + '<br />'
                                 }
 
-                                console.log(results)
-
                                 if (results[0]) {
                                     var queryString;
                                     var addr = results[0].formatted_address.split(',');
@@ -173,8 +183,7 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
 
                                     wikiQuerySearch({
                                         query:queryString,
-                                        searchType:'',
-                                        wikiLocale:'no'
+                                        searchType:''
                                     });
 
                                     $scope.debug += 'Wiki search string: ' + queryString + '<br />';

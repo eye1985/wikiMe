@@ -5,6 +5,9 @@
 
     <ion-content>
         <ul class="list">
+            <div class="item item-divider">
+                App settings
+            </div>
             <li class="item item-toggle">
                 Show debug
                 <label class="toggle toggle-balanced">
@@ -23,6 +26,14 @@
                     </div>
                 </label>
             </li>
+        </ul>
+
+        <ul class="list">
+            <div class="item item-divider">
+                Wikipedia locale
+            </div>
+            <ion-radio ng-model="Settings.wikiLocale" ng-value="'no'">Norwegian</ion-radio>
+            <ion-radio ng-model="Settings.wikiLocale" ng-value="'en'">English</ion-radio>
         </ul>
     </ion-content>
 </ion-view>
