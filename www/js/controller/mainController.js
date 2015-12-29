@@ -53,7 +53,11 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
         };
     }
 
-    function showNearbyPlaces(maps,curLocation){
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    function showNearbyPlaces(maps,curLocation,title){
         if(Settings.showNearbyPlaces){
             uiGmapIsReady.promise()
                 .then(function(mapInstances){
@@ -62,6 +66,22 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
                         location: curLocation,
                         radius: '500'
                     };
+
+                    var circle = new maps.Circle({
+                        map: mapInstances[0].map,
+                        radius: 500,    // 500 meters
+                        fillColor: '#33ccff',
+                        strokeWeight: 1
+                    });
+
+                    var marker = new google.maps.Marker({
+                        position: curLocation,
+                        map: mapInstances[0].map,
+                        title: title
+                    });
+
+                    circle.bindTo('center', marker, 'position');
+
                     places.nearbySearch(request,function(res,status){
                         if (status == google.maps.places.PlacesServiceStatus.OK) {
 
@@ -113,15 +133,6 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
                         var curLocation = new maps.LatLng(lat, long);
 
                         $scope.map = {center: {latitude: lat, longitude: long }, zoom: 14 , control: {}};
-                        $scope.marker = {
-                            id: 0,
-                            coords: {
-                                latitude: lat,
-                                longitude: long
-                            }
-                        };
-
-                        showNearbyPlaces(maps,curLocation);
 
                         $scope.debug += 'lat: '+lat + '<br />';
                         $scope.debug += 'long: '+long + '<br />';
@@ -132,15 +143,41 @@ wikiHereApp.controller('MainController', function ($scope,$ionicLoading, $http, 
                                     $scope.debug += i + ': ' + results[i].formatted_address + '<br />'
                                 }
 
+                                console.log(results)
+
                                 if (results[0]) {
+                                    var queryString;
                                     var addr = results[0].formatted_address.split(',');
+
+                                    var doesAddrContainsNumber = function(str){
+                                        if(str.match(/\d+/g) != null){
+                                            return true;
+                                        }
+                                        return false;
+                                    };
+                                    var addrRecursion = function(resArr,num){
+                                        if(doesAddrContainsNumber(resArr[num].long_name)){
+                                            addrRecursion(resArr,++num);
+                                        }else{
+                                            queryString = resArr[num].long_name;
+                                        }
+                                    };
+
+                                    showNearbyPlaces(maps,curLocation,results[0].formatted_address);
+
+                                    if(doesAddrContainsNumber(addr[0])){
+                                        addrRecursion(results[0].address_components,0)
+                                    }else{
+                                        queryString = addr[0];
+                                    }
+
                                     wikiQuerySearch({
-                                        query:addr[0],
+                                        query:queryString,
                                         searchType:'',
                                         wikiLocale:'no'
                                     });
 
-                                    $scope.debug += 'Wiki search string: ' + addr[0] + '<br />';
+                                    $scope.debug += 'Wiki search string: ' + queryString + '<br />';
                                 } else {
                                     $scope.debug = 'No addr';
                                 }
