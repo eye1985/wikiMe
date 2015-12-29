@@ -1,0 +1,10 @@
+{
+  "name": "wikiHere",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.2.1"
+  },
+  "dependencies": {
+    "angular-google-maps": "~2.2.1"
+  }
+}

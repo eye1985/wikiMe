@@ -1,0 +1,58 @@
+<ion-view title="WikiHere">
+
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <div class="row responsive-sm debug" ng-if="Settings.showDebug">
+            <div class="col">Debug:</div>
+            <div class="col" ng-bind-html="debug"></div>
+        </div>
+
+        <ui-gmap-google-map ng-if="Settings.showNearbyPlaces" center="map.center" zoom="map.zoom" ng-if="map" control="map.control">
+            <ui-gmap-marker coords="marker.coords" options="marker.options" events="marker.events" idkey="marker.id">
+            </ui-gmap-marker>
+        </ui-gmap-google-map>
+
+        <div class="row">
+            <div class="col">
+                <button class="button button-balanced" ng-click="getInfo()" type="button">
+                    Wiki here
+                </button>
+            </div>
+        </div>
+
+        <div class="card" ng-if="data.resultText.isVisible">
+            <div class="item item-divider">
+                Wikipedia
+            </div>
+            <div class="item item-text-wrap" ng-bind-html="data.resultText.text">
+            </div>
+        </div>
+
+        <div class="list list-inset" ng-if="data.searchResults.isVisible">
+            <div class="item item-divider">
+                Wikipedia
+            </div>
+            <div class="item" ng-repeat="item in data.searchResults.results" ng-click="getInfoFromResult(item.title)">
+                {{item.title}}
+            </div>
+
+            <div class="item item-divider" ng-if="Settings.showNearbyPlaces">
+                Google places nearby
+            </div>
+
+            <div class="item"
+                 ng-if="Settings.showNearbyPlaces"
+                 ng-repeat="item in data.searchResults.places"
+                 ng-click="getInfoFromResult(item.name)">
+                {{item.name}}
+            </div>
+        </div>
+
+        <div class="row" ng-if="data.noResult">
+            No result
+        </div>
+    </ion-content>
+</ion-view>

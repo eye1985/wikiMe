@@ -1,0 +1,28 @@
+<ion-view title="Settings">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <ul class="list">
+            <li class="item item-toggle">
+                Show debug
+                <label class="toggle toggle-balanced">
+                    <input id="showDebug" type="checkbox" ng-model="Settings.showDebug">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+            <li class="item item-toggle">
+                Show places nearby
+                <label class="toggle toggle-balanced">
+                    <input id="showPlacesNearby" type="checkbox" ng-model="Settings.showNearbyPlaces">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+        </ul>
+    </ion-content>
+</ion-view>
