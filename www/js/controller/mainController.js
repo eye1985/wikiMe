@@ -67,7 +67,8 @@ wikiHereApp.controller('MainController',
         $scope.Settings = Settings;
         $scope.data = {
             extracts:'',
-            listSearch:[]
+            listSearch:[],
+            imageUrl:''
         };
 
         $scope.getInfo = function () {
@@ -95,10 +96,15 @@ wikiHereApp.controller('MainController',
                                             $scope.data.extracts = '';
                                         });
                                     }else{
-                                        $scope.data.extracts = result;
+                                        $scope.data.extracts = result.extract;
+
+                                        if(Settings.showImages){
+                                            WikipediaApiFactory.queryImage(result.pageId,Settings.wikiLocale,function(imageUrl){
+                                                $scope.data.imageUrl = imageUrl;
+                                            });
+                                        }
                                     }
                                 });
-
                             } else {
                                 console.log('Geocoder failed due to: ' + status);
                             }

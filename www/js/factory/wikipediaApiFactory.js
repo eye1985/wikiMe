@@ -25,11 +25,28 @@ wikiHereApp.factory('WikipediaApiFactory',['$http',function(http){
 
             //Add explaintext for plain text
             //Add exintro for ??
-
             var props = '&prop=extracts&exintro=&titles=';
 
             http.jsonp(wikipediaAPIs[locale] + props + encodedQuery).success(function (data, status, headers, config) {
-                fn(_.values(data.query.pages)[0].extract);
+                var preparedData = {
+                    extract : _.values(data.query.pages)[0].extract,
+                    pageId:_.keys(data.query.pages)[0]
+                };
+
+                fn(preparedData);
+            }).error(function (data, status, headers, config) {
+                return data;
+            });
+        },
+
+        queryImage : function(pageId,locale,fn){
+            var screenWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+            var props = '&prop=pageimages&piprop=thumbnail&pithumbsize='+screenWidth+'&pageids=';
+            http.jsonp(wikipediaAPIs[locale] + props + pageId).success(function (data, status, headers, config) {
+                var thumbnailObj = _.values(data.query.pages)[0].thumbnail;
+                var imageUrl = _.isUndefined(thumbnailObj)?undefined:thumbnailObj.source;
+
+                fn(imageUrl);
             }).error(function (data, status, headers, config) {
                 return data;
             });
