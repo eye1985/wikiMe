@@ -5,10 +5,6 @@
     </ion-nav-buttons>
 
     <ion-content>
-        <div class="row responsive-sm debug" ng-if="Settings.showDebug">
-            <div class="col">Debug:</div>
-            <div class="col" ng-bind-html="debug"></div>
-        </div>
 
         <ui-gmap-google-map ng-if="Settings.showNearbyPlaces" center="map.center" zoom="map.zoom" ng-if="map" control="map.control">
         </ui-gmap-google-map>
@@ -21,32 +17,33 @@
             </div>
         </div>
 
-        <div class="card" ng-if="data.resultText.isVisible">
+        <div class="card" ng-if="data.extracts.length > 0">
             <div class="item item-divider">
                 Wikipedia
             </div>
-            <div class="item item-text-wrap" ng-bind-html="data.resultText.text">
+            <div class="item item-text-wrap" ng-bind-html="data.extracts">
             </div>
         </div>
 
-        <div class="list list-inset" ng-if="data.searchResults.isVisible">
+        <div class="list list-inset" ng-if="data.listSearch.length > 0">
             <div class="item item-divider">
-                Wikipedia
-            </div>
-            <div class="item" ng-repeat="item in data.searchResults.results" ng-click="getInfoFromResult(item.title)">
-                {{item.title}}
+                Could not find what you were looking for, did you mean one of these?
             </div>
 
-            <div class="item item-divider" ng-if="Settings.showNearbyPlaces">
-                Google places nearby
+            <div class="item" ng-repeat="item in data.listSearch" ng-click="getWikiExtracts(item)">
+                {{item}}
             </div>
 
-            <div class="item"
-                 ng-if="Settings.showNearbyPlaces"
-                 ng-repeat="item in data.searchResults.places"
-                 ng-click="getInfoFromResult(item.name)">
-                {{item.name}}
-            </div>
+            <!--<div class="item item-divider" ng-if="Settings.showNearbyPlaces">-->
+                <!--Google places nearby-->
+            <!--</div>-->
+
+            <!--<div class="item"-->
+                 <!--ng-if="Settings.showNearbyPlaces"-->
+                 <!--ng-repeat="item in data.searchResults.places"-->
+                 <!--ng-click="getInfoFromResult(item.name)">-->
+                <!--{{item.name}}-->
+            <!--</div>-->
         </div>
 
         <div class="row" ng-if="data.noResult">

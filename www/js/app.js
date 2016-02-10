@@ -31,6 +31,16 @@ wikiHereApp.config(function($stateProvider, $urlRouterProvider,uiGmapGoogleMapAp
         }
       })
 
+      .state('app.console',{
+        url:"/console",
+        views:{
+         content:{
+           templateUrl:'console.html',
+           controller:'ConsoleController'
+         }
+        }
+      })
+
       .state('app.settings',{
         url:"/settings",
         views:{

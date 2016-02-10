@@ -1,9 +1,8 @@
 wikiHereApp.factory('Settings', function () {
-
     var settings = {
-        showDebug:false,
         showNearbyPlaces:false,
-        wikiLocale:'no'
+        wikiLocale:'no',
+        highAccuracy:true
     };
 
     return settings;
