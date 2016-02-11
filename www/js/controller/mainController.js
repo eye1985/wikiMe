@@ -1,5 +1,5 @@
 wikiHereApp.controller('MainController',
-    function ($scope, $ionicLoading, uiGmapIsReady, Settings, WikipediaApiFactory, GeolocationFactory,GoogleMapsApiFactory) {
+    function ($scope, $ionicLoading, uiGmapIsReady, Settings,Console, WikipediaApiFactory, GeolocationFactory,GoogleMapsApiFactory) {
         /**
          * Disabled for now
          * **
@@ -82,11 +82,15 @@ wikiHereApp.controller('MainController',
                         var geocoder = new maps.Geocoder();
                         var curLocation = new maps.LatLng(lat, long);
 
+                        Console.addStep(curLocation + ' retrieved');
+
                         geocoder.geocode({'location': curLocation}, function (results, status) {
                             if (status === google.maps.GeocoderStatus.OK) {
 
                                 var resultsByGoogle = GoogleMapsApiFactory.filterResultsBy(results);
                                 var queryString = resultsByGoogle.addresse() + ' ' + '('+ resultsByGoogle.postalTown() + ')';
+
+                                Console.addStep(queryString + ' ready to query wiki');
 
                                 WikipediaApiFactory.queryExtracts(queryString,Settings.wikiLocale,function(result){
                                     if(_.isUndefined(result)){
@@ -94,19 +98,23 @@ wikiHereApp.controller('MainController',
                                         WikipediaApiFactory.queryWiki(wikiQueryString,Settings.wikiLocale,function(result){
                                             $scope.data.listSearch = result;
                                             $scope.data.extracts = '';
+
+                                            Console.addStep('Extracts not found, shows list instead');
                                         });
                                     }else{
                                         $scope.data.extracts = result.extract;
+                                        Console.addStep('Extracts found, displayed on screen');
 
                                         if(Settings.showImages){
                                             WikipediaApiFactory.queryImage(result.pageId,Settings.wikiLocale,function(imageUrl){
                                                 $scope.data.imageUrl = imageUrl;
+                                                Console.addStep('Image found, displayed on screen');
                                             });
                                         }
                                     }
                                 });
                             } else {
-                                console.log('Geocoder failed due to: ' + status);
+                                Console.addStep('Geocoder failed due to: ' + status);
                             }
                         });
                     });

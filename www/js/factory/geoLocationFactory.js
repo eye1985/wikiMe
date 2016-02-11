@@ -10,7 +10,7 @@ wikiHereApp.factory('GeolocationFactory',['$cordovaGeolocation',function(cordova
                     fn(lat,long);
 
                 }, function (err) {
-                    // error
+                    return err;
                 });
         }
     };

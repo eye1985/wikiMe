@@ -16,7 +16,7 @@ wikiHereApp.factory('WikipediaApiFactory',['$http',function(http){
 
                 fn(resultTitles);
             }).error(function (data, status, headers, config) {
-
+                return data + ' ' + status;
             });
         },
 
@@ -35,7 +35,7 @@ wikiHereApp.factory('WikipediaApiFactory',['$http',function(http){
 
                 fn(preparedData);
             }).error(function (data, status, headers, config) {
-                return data;
+                return data + ' ' + status;
             });
         },
 
@@ -48,7 +48,7 @@ wikiHereApp.factory('WikipediaApiFactory',['$http',function(http){
 
                 fn(imageUrl);
             }).error(function (data, status, headers, config) {
-                return data;
+                return data + ' ' + status;
             });
         }
     };
