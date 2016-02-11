@@ -93,7 +93,7 @@ wikiHereApp.controller('MainController',
                                 Console.addStep(queryString + ' ready to query wiki');
 
                                 WikipediaApiFactory.queryExtracts(queryString,Settings.wikiLocale,function(result){
-                                    if(_.isUndefined(result)){
+                                    if(_.isUndefined(result.extract)){
                                         var wikiQueryString = resultsByGoogle.addresse();
                                         WikipediaApiFactory.queryWiki(wikiQueryString,Settings.wikiLocale,function(result){
                                             $scope.data.listSearch = result;
