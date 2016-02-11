@@ -64,6 +64,31 @@ wikiHereApp.controller('MainController',
 
         var posOptions = {timeout: 5000, enableHighAccuracy: Settings.highAccuracy};
 
+        var queryWikiExtracts = function(query,resultsByGoogle){
+            WikipediaApiFactory.queryExtracts(query,Settings.wikiLocale,function(result){
+                if(_.isUndefined(result.extract)){
+                    var wikiQueryString = resultsByGoogle.addresse();
+                    WikipediaApiFactory.queryWiki(wikiQueryString,Settings.wikiLocale,function(result){
+                        $scope.data.listSearch = result;
+                        $scope.data.extracts = '';
+
+                        Console.addStep('Extracts not found, shows list instead');
+                    });
+                }else{
+                    $scope.data.extracts = result.extract;
+                    Console.addStep('Extracts found, displayed on screen');
+
+                    if(Settings.showImages){
+                        WikipediaApiFactory.queryImage(result.pageId,Settings.wikiLocale,function(imageUrl){
+                            $scope.data.imageUrl = imageUrl;
+
+                            Console.addStep('Image found, displayed on screen');
+                        });
+                    }
+                }
+            });
+        };
+
         $scope.Settings = Settings;
         $scope.data = {
             extracts:'',
@@ -92,27 +117,7 @@ wikiHereApp.controller('MainController',
 
                                 Console.addStep(queryString + ' ready to query wiki');
 
-                                WikipediaApiFactory.queryExtracts(queryString,Settings.wikiLocale,function(result){
-                                    if(_.isUndefined(result.extract)){
-                                        var wikiQueryString = resultsByGoogle.addresse();
-                                        WikipediaApiFactory.queryWiki(wikiQueryString,Settings.wikiLocale,function(result){
-                                            $scope.data.listSearch = result;
-                                            $scope.data.extracts = '';
-
-                                            Console.addStep('Extracts not found, shows list instead');
-                                        });
-                                    }else{
-                                        $scope.data.extracts = result.extract;
-                                        Console.addStep('Extracts found, displayed on screen');
-
-                                        if(Settings.showImages){
-                                            WikipediaApiFactory.queryImage(result.pageId,Settings.wikiLocale,function(imageUrl){
-                                                $scope.data.imageUrl = imageUrl;
-                                                Console.addStep('Image found, displayed on screen');
-                                            });
-                                        }
-                                    }
-                                });
+                                queryWikiExtracts(queryString,resultsByGoogle);
                             } else {
                                 Console.addStep('Geocoder failed due to: ' + status);
                             }
@@ -123,9 +128,7 @@ wikiHereApp.controller('MainController',
         };
 
         $scope.getWikiExtracts = function(query){
-            WikipediaApiFactory.queryExtracts(query,Settings.wikiLocale,function(result){
-                $scope.data.extracts = result;
-                $scope.data.listSearch = [];
-            });
+            queryWikiExtracts(query,'');
+            $scope.data.listSearch = [];
         };
     });
