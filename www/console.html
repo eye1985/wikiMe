@@ -3,13 +3,15 @@
         <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
 
-    <ion-content>
-
-        Console stuff goes here
-
-        <div ng-repeat="log in logs">
-            <div>{{log}}</div>
+    <ion-content class="debugConsole padding">
+        <div ng-if="!logs">
+            No action performed
         </div>
 
+        <div ng-repeat="log in logs track by $index">
+            <div class="row">
+                <span class="italic">{{$index+1}}</span>. - {{log}}
+            </div>
+        </div>
     </ion-content>
 </ion-view>

@@ -1,3 +1,5 @@
 wikiHereApp.controller('ConsoleController', ['$scope','Console',function ($scope,Console) {
-    $scope.logs = Console.getSteps();
+    Console.addListener(function(){
+        $scope.logs = Console.getSteps();
+    });
 }]);

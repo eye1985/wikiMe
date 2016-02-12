@@ -81,9 +81,11 @@ wikiHereApp.controller('MainController',
                     if(Settings.showImages){
                         WikipediaApiFactory.queryImage(result.pageId,Settings.wikiLocale,function(imageUrl){
                             $scope.data.imageUrl = imageUrl;
-
+                            console.log(1);
                             Console.addStep('Image found, displayed on screen');
                         });
+                    }else{
+                        $scope.data.imageUrl = null;
                     }
                 }
             });
@@ -102,6 +104,8 @@ wikiHereApp.controller('MainController',
             //});
 
             ionic.Platform.ready(function () {
+                Console.clearConsole();
+                window.test = Console;
                 GoogleMapsApiFactory.getGoogleMaps(function(maps){
                     GeolocationFactory.getCurrentLocation(posOptions,function (lat, long) {
                         var geocoder = new maps.Geocoder();
@@ -128,6 +132,7 @@ wikiHereApp.controller('MainController',
         };
 
         $scope.getWikiExtracts = function(query){
+            Console.clearConsole();
             queryWikiExtracts(query,'');
             $scope.data.listSearch = [];
         };
