@@ -4,6 +4,15 @@
     </ion-nav-buttons>
 
     <ion-content class="debugConsole padding">
+
+        <div class="row">
+            <div class="col">
+                <button class="button button-assertive" type="button" ng-click="clearConsole()">
+                    Clear console
+                </button>
+            </div>
+        </div>
+
         <div ng-if="!logs">
             No action performed
         </div>

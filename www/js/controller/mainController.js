@@ -72,6 +72,7 @@ wikiHereApp.controller('MainController',
                         $scope.data.listSearch = result;
                         $scope.data.extracts = '';
 
+                        $scope.$broadcast('scroll.refreshComplete');
                         Console.addStep('Extracts not found, shows list instead');
                     });
                 }else{
@@ -81,11 +82,12 @@ wikiHereApp.controller('MainController',
                     if(Settings.showImages){
                         WikipediaApiFactory.queryImage(result.pageId,Settings.wikiLocale,function(imageUrl){
                             $scope.data.imageUrl = imageUrl;
-                            console.log(1);
+                            $scope.$broadcast('scroll.refreshComplete');
                             Console.addStep('Image found, displayed on screen');
                         });
                     }else{
                         $scope.data.imageUrl = null;
+                        $scope.$broadcast('scroll.refreshComplete');
                     }
                 }
             });
@@ -104,8 +106,6 @@ wikiHereApp.controller('MainController',
             //});
 
             ionic.Platform.ready(function () {
-                Console.clearConsole();
-                window.test = Console;
                 GoogleMapsApiFactory.getGoogleMaps(function(maps){
                     GeolocationFactory.getCurrentLocation(posOptions,function (lat, long) {
                         var geocoder = new maps.Geocoder();
@@ -132,8 +132,12 @@ wikiHereApp.controller('MainController',
         };
 
         $scope.getWikiExtracts = function(query){
-            Console.clearConsole();
             queryWikiExtracts(query,'');
             $scope.data.listSearch = [];
         };
+
+        ionic.Platform.ready(function () {
+            Console.addStep('Initial query called');
+            $scope.getInfo();
+        });
     });

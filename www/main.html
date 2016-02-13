@@ -9,13 +9,10 @@
         <!--<ui-gmap-google-map ng-if="Settings.showNearbyPlaces" center="map.center" zoom="map.zoom" ng-if="map" control="map.control">-->
         <!--</ui-gmap-google-map>-->
 
-        <div class="row">
-            <div class="col">
-                <button class="button button-balanced" ng-click="getInfo()" type="button">
-                    Wiki here
-                </button>
-            </div>
-        </div>
+        <ion-refresher
+                pulling-text="Pull to refresh..."
+                on-refresh="getInfo()">
+        </ion-refresher>
 
         <div class="card" ng-if="data.extracts.length > 0">
             <div class="item item-divider">
